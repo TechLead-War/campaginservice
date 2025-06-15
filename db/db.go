@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strings"
 
 	_ "github.com/lib/pq"
 )
@@ -38,9 +37,9 @@ func Connect() *sql.DB {
 	return db
 }
 
-func GetTargetedCampaigns(db *sql.DB, appID, country, os string) ([]models.Campaign, error) {
+func GetTargetedCampaigns(db *sql.DB, appID, country, os string, limit int, offset int) ([]models.Campaign, error) {
 	dimensionValues := map[string]string{
-		"app":     appID,
+		"app_id":  appID,
 		"country": country,
 		"os":      os,
 	}
@@ -59,17 +58,19 @@ func GetTargetedCampaigns(db *sql.DB, appID, country, os string) ([]models.Campa
 		argIndex++
 	}
 
-	whereClause := strings.Join(conditions, " OR ")
-
-	query := fmt.Sprintf(`
-        SELECT c.campaign_id, c.campaign_name, c.image_url, c.call_to_action
-        FROM campaigns c
-        WHERE c.campaign_status = 'ACTIVE'
-        AND NOT EXISTS (
-            SELECT 1 FROM targeting_rules tr
-            WHERE tr.campaign_id = c.campaign_id
-            AND (%s)
-        )`, whereClause)
+	query := `
+		SELECT c.campaign_id, c.campaign_name, c.image_url, c.call_to_action
+		FROM campaigns c
+		LEFT JOIN targeting_rules tr ON tr.campaign_id = c.campaign_id
+		WHERE c.campaign_status = 'ACTIVE'
+		GROUP BY c.campaign_id, c.campaign_name, c.image_url, c.call_to_action
+		HAVING bool_and(
+			(tr.dimension != 'app_id' OR (tr.type = 'include' AND tr.value = $1) OR (tr.type = 'exclude' AND tr.value != $1))
+		) AND bool_and(
+			(tr.dimension != 'country' OR (tr.type = 'include' AND tr.value = $2) OR (tr.type = 'exclude' AND tr.value != $2))
+		) AND bool_and(
+			(tr.dimension != 'os' OR (tr.type = 'include' AND tr.value = $3) OR (tr.type = 'exclude' AND tr.value != $3))
+		)`
 
 	rows, err := db.Query(query, args...)
 	if err != nil {

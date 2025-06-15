@@ -6,6 +6,7 @@ import (
 	"campaignservice/utils"
 	"encoding/json"
 	"net/http"
+	"strconv"
 )
 
 func DeliveryHandler(w http.ResponseWriter, r *http.Request) {
@@ -27,10 +28,20 @@ func DeliveryHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	page, _ := strconv.Atoi(q.Get("page"))
+	limit, _ := strconv.Atoi(q.Get("limit"))
+	if page < 1 {
+		page = 1
+	}
+	if limit < 1 || limit > 100 {
+		limit = utils.DefaultApiPageLimit
+	}
+	offset := (page - 1) * limit
+
 	dbConn := db.Connect()
 	defer dbConn.Close()
 
-	campaigns, err := db.GetTargetedCampaigns(dbConn, app, osParam, country)
+	campaigns, err := db.GetTargetedCampaigns(dbConn, app, country, osParam, limit, offset)
 	if err != nil {
 		utils.ErrorJSON(w, http.StatusInternalServerError, utils.InternalServerError)
 		return

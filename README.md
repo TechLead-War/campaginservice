@@ -11,7 +11,7 @@ migrate -path migrations -database "postgres://postgres:password@localhost:5432/
 3. Seed some data, with the following command:
 ```bash
 
-go run seed.go -records=2000  -workers=20
+go run seed.go -records=2000 -workers=20
 ```
 
 ### Note:<br>

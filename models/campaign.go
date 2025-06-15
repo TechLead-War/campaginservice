@@ -18,3 +18,15 @@ type TargetingRule struct {
 	CDate      string
 	UDate      string
 }
+
+type DeliveryRequest struct {
+	AppID   string `json:"app_id"`
+	Country string `json:"country"`
+	OS      string `json:"os"`
+}
+
+type DeliveryResponse struct {
+	CID string `json:"cid"`
+	Img string `json:"img"`
+	CTA string `json:"cta"`
+}

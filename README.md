@@ -29,11 +29,6 @@ docker-compose build
 docker-compose up
 ```
 
-4. Run the service:
-```bash
-
-air
-```
 
 ### Note:<br>
 This repo is tested with Go 1.23.5 and Postgres 15.4. With a 30L+ records.

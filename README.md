@@ -28,6 +28,8 @@ docker-compose down -v
 docker-compose build
 docker-compose up
 ```
+## DB Schema:
+![Screenshot 2025-06-17 at 4 54 49 PM](https://github.com/user-attachments/assets/f2d70357-229f-4c0b-81da-b019fa4e7f5d)
 
 
 ### Note:<br>

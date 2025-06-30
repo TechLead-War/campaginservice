@@ -1,10 +1,10 @@
 package utils
 
 const (
-	ErrMissingApp       = "missing app param"
-	ErrMissingOS        = "missing os param"
-	ErrMissingCountry   = "missing country param"
-	ErrMethodNotAllowed = "method not allowed"
+	ErrMissingApp       = "missing app parameter"
+	ErrMissingOS        = "missing os parameter"
+	ErrMissingCountry   = "missing country parameter"
+	ErrMethodNotAllowed = "method is not allowed"
 	InternalServerError = "internal server error"
 	DefaultApiPageLimit = 10
 )

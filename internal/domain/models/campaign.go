@@ -26,7 +26,7 @@ type DeliveryRequest struct {
 }
 
 type DeliveryResponse struct {
-	CID string `json:"cid"`
-	Img string `json:"img"`
-	CTA string `json:"cta"`
+	CampaignID   string `json:"campaign_id"`
+	ImageURL     string `json:"image_url"`
+	CallToAction string `json:"call_to_action"`
 }
